@@ -17,6 +17,7 @@
 
 const App = require('actions-on-google').ApiAiApp;
 const functions = require('firebase-functions');
+const weekday = require('weekday');
 
 // Api.ai intents
 const WELCOME_INTENT = 'input.welcome';
@@ -25,9 +26,11 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
     const app = new App({request, response});
 
     function welcome() {
-
+        app.ask(`Hi, Your yoga master here! shall we start your ${weekday()} lesson?`);
     }
 
     const actionMap = new Map();
     actionMap.set(WELCOME_INTENT, welcome);
+
+    app.handleRequest(actionMap);
 });
