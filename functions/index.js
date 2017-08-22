@@ -45,7 +45,27 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
             case 'Monday':
                 selectedData = data.monday[index];
                 break;
+            case 'Tuesday':
+                selectedData = data.monday[index];
+                break;
+            case 'Wednesday':
+                selectedData = data.monday[index];
+                break;
+            case 'Thursday':
+                selectedData = data.monday[index];
+                break;
+            case 'Friday':
+                selectedData = data.monday[index];
+                break;
+            case 'Saturday':
+                selectedData = data.monday[index];
+                break;
+            case 'Sunday':
+                selectedData = data.monday[index];
+                break;
             default:
+                selectedData = data.monday[index];
+                break;
         }
 
         let prompt = SSML_SPEAK_START + selectedData.speech + SSML_SPEAK_END;
