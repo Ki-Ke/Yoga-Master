@@ -18,11 +18,11 @@
 const App = require('actions-on-google').ApiAiApp;
 const functions = require('firebase-functions');
 const weekday = require('weekday');
-const data = require('./yogaData');
+const data = require('./data');
 
 // Api.ai intents
 const WELCOME_INTENT = 'input.welcome';
-const START_LESSON_INTENT = 'input.welcome';
+const START_LESSON_INTENT = 'input.startLesson';
 
 // Speech constants
 const SSML_SPEAK_START = '<speak>';
@@ -36,7 +36,7 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
     }
 
     function startLesson() {
-        app.tell(SSML_SPEAK_START + data[0].description + SSML_SPEAK_END);
+        app.tell(SSML_SPEAK_START + data.data[1].description + SSML_SPEAK_END);
     }
 
     const actionMap = new Map();
