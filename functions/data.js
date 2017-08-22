@@ -1,3 +1,5 @@
+const weekday = require('weekday');
+
 const one = "<break time='1s'/>";
 const two = "<break time='2s'/>";
 const three = "<break time='3s'/>";
@@ -19,6 +21,41 @@ const monday = [
     }
 ];
 
+/**
+ *
+ * @param index
+ * @returns {{name, sanskritName, speech, description}|*}
+ */
+function getAsana(index) {
+    switch(weekday()) {
+        case 'Monday':
+            return monday[index];
+            break;
+        case 'Tuesday':
+            return monday[index];
+            break;
+        case 'Wednesday':
+            return monday[index];
+            break;
+        case 'Thursday':
+            return monday[index];
+            break;
+        case 'Friday':
+            return monday[index];
+            break;
+        case 'Saturday':
+            return monday[index];
+            break;
+        case 'Sunday':
+            return monday[index];
+            break;
+        default:
+            return data.monday[index];
+            break;
+    }
+}
+
 module.exports = {
-    monday
+    monday,
+    getAsana
 };
