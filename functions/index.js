@@ -32,11 +32,36 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
     const app = new App({request, response});
 
     function welcome() {
+        app.data.index = 0;
         app.ask(`Hi, Your yoga master here! To start your ${weekday()} lessons just say 'start lesson'`);
     }
 
     function startLesson() {
-        app.tell(SSML_SPEAK_START + data.data[1].description + SSML_SPEAK_END);
+
+        let selectedData;
+        let index = app.data.index;
+
+        switch(weekday()) {
+            case 'Monday':
+                selectedData = data.monday[index];
+                break;
+            default:
+        }
+
+        let prompt = SSML_SPEAK_START + selectedData.speech + SSML_SPEAK_END;
+        if (app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
+            const cardView = app.buildRichResponse()
+                .addSimpleResponse(prompt)
+                .addBasicCard(app.buildBasicCard(selectedData.description)
+                    .setSubtitle(selectedData.name)
+                    .setTitle(selectedData));
+                    //.setImage(appData.image, appData.name));
+            app.data.index++;
+            app.ask(cardView);
+        } else {
+            app.data.index++;
+            app.ask(prompt);
+        }
     }
 
     const actionMap = new Map();
