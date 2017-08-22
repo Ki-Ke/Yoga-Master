@@ -8,11 +8,12 @@ let yogaData = [
     },
     {
         name: "Four-Limbed Staff Pose",
-        description: ["Chaturaṅga Daṇḍāsana the hands and feet are on the floor, supporting the body",
-            '<break time=“3s”/>',
-            "which is parallel to and lowered toward, but not touching, the floor.",
-            '<break time=“3s”/>',
-            "It looks much like a push up, but with the hands quite low (just above the pelvis), and the elbows kept in along the sides of the body"]
+        original: "Chaturaṅga Daṇḍāsana",
+        description: `The hands and feet are on the floor, supporting the body" 
+            '<break time=“3s”/>'
+            "which is parallel to and lowered toward, but not touching, the floor."
+            '<break time=“3s”/>'
+            "It looks much like a push up, but with the hands quite low (just above the pelvis), and the elbows kept in along the sides of the body`
     }
 ];
 

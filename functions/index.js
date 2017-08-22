@@ -18,19 +18,31 @@
 const App = require('actions-on-google').ApiAiApp;
 const functions = require('firebase-functions');
 const weekday = require('weekday');
+const data = require('./yogaData');
 
 // Api.ai intents
 const WELCOME_INTENT = 'input.welcome';
+const START_LESSON_INTENT = 'input.welcome';
+
+// Speech constants
+const SSML_SPEAK_START = '<speak>';
+const SSML_SPEAK_END = '</speak>';
 
 exports.yogaMaster = functions.https.onRequest((request, response) => {
     const app = new App({request, response});
 
     function welcome() {
-        app.ask(`Hi, Your yoga master here! shall we start your ${weekday()} lesson?`);
+        app.ask(`Hi, Your yoga master here! To start your ${weekday()} lessons just say 'start lesson'`);
+    }
+
+    function startLesson() {
+        app.tell(SSML_SPEAK_START + data[0].description + SSML_SPEAK_END);
     }
 
     const actionMap = new Map();
     actionMap.set(WELCOME_INTENT, welcome);
+
+    actionMap.set(START_LESSON_INTENT, startLesson);
 
     app.handleRequest(actionMap);
 });
