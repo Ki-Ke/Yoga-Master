@@ -39,7 +39,7 @@ const SSML_SPEAK_START = '<speak>';
 const SSML_SPEAK_END = '</speak>';
 const MEDITATION_AUDIO = HOSTING_URL + "/audio/meditation.mp3";
 
-const AUDIO = '<audio src="'+ MEDITATION_AUDIO +'">Just close your eyes and relax</audio>';
+const AUDIO = '<audio src="'+ MEDITATION_AUDIO +'">Playing nature sound</audio>';
 
 exports.yogaMaster = functions.https.onRequest((request, response) => {
     const app = new App({request, response});
@@ -127,7 +127,10 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
     }
 
     function meditation() {
-        let prompt = SSML_SPEAK_START + AUDIO + SSML_SPEAK_END;
+        let prompt = SSML_SPEAK_START
+            + `Ok, Lets start, close you eyes and relax`
+            + AUDIO
+            + SSML_SPEAK_END;
         app.ask(prompt);
     }
 
