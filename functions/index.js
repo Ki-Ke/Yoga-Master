@@ -17,6 +17,14 @@
 
 const App = require('actions-on-google').ApiAiApp;
 const functions = require('firebase-functions');
+const firebase = require('firebase-admin');
+
+firebase.initializeApp({
+    credential: firebase.credential.applicationDefault(),
+    databaseURL: "https://yogamaster-89cde.firebaseio.com"
+});
+const db = firebase.database();
+
 const weekday = require('weekday');
 const data = require('./data');
 
@@ -39,26 +47,30 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
     function startLesson() {
 
         let index = app.data.index;
-        const currentAsana = data.getAsana(index);
+        let currentAsana = db.ref(`${weekday()}/${index}`);
 
-        if (currentAsana) {
-            let prompt = SSML_SPEAK_START + currentAsana.speech + SSML_SPEAK_END;
-            if (app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
-                const cardView = app.buildRichResponse()
-                    .addSimpleResponse(prompt)
-                    .addBasicCard(app.buildBasicCard(currentAsana.description)
-                        .setSubtitle(currentAsana.name)
-                        .setTitle(currentAsana.sanskritName));
-                //.setImage(appData.image, appData.name));
-                app.data.index++;
-                app.ask(cardView);
+        currentAsana.once('value').then((snapshot) => {
+            if (snapshot.exists()) {
+                let prompt = SSML_SPEAK_START + snapshot.speech + SSML_SPEAK_END;
+                if (app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
+                    const cardView = app.buildRichResponse()
+                        .addSimpleResponse(prompt)
+                        .addBasicCard(app.buildBasicCard(snapshot.description)
+                            .setSubtitle(snapshot.name)
+                            .setTitle(snapshot.sanskritName));
+                    //.setImage(appData.image, appData.name));
+                    app.data.index++;
+                    app.ask(cardView);
+                } else {
+                    app.data.index++;
+                    app.ask(prompt);
+                }
             } else {
-                app.data.index++;
-                app.ask(prompt);
+                console.error('StartLesson Intent: snapshot does not exists');
+                app.tell('Sorry! Something went wrong please try again later');
             }
-        } else {
-            app.tell('Completed');
-        }
+
+        });
     }
 
     const actionMap = new Map();
