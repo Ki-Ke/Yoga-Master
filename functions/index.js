@@ -38,49 +38,26 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
 
     function startLesson() {
 
-        let selectedData;
         let index = app.data.index;
+        const currentAsana = data.getAsana(index);
 
-        switch(weekday()) {
-            case 'Monday':
-                selectedData = data.monday[index];
-                break;
-            case 'Tuesday':
-                selectedData = data.monday[index];
-                break;
-            case 'Wednesday':
-                selectedData = data.monday[index];
-                break;
-            case 'Thursday':
-                selectedData = data.monday[index];
-                break;
-            case 'Friday':
-                selectedData = data.monday[index];
-                break;
-            case 'Saturday':
-                selectedData = data.monday[index];
-                break;
-            case 'Sunday':
-                selectedData = data.monday[index];
-                break;
-            default:
-                selectedData = data.monday[index];
-                break;
-        }
-
-        let prompt = SSML_SPEAK_START + selectedData.speech + SSML_SPEAK_END;
-        if (app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
-            const cardView = app.buildRichResponse()
-                .addSimpleResponse(prompt)
-                .addBasicCard(app.buildBasicCard(selectedData.description)
-                    .setSubtitle(selectedData.name)
-                    .setTitle(selectedData));
-                    //.setImage(appData.image, appData.name));
-            app.data.index++;
-            app.ask(cardView);
+        if (currentAsana) {
+            let prompt = SSML_SPEAK_START + currentAsana.speech + SSML_SPEAK_END;
+            if (app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
+                const cardView = app.buildRichResponse()
+                    .addSimpleResponse(prompt)
+                    .addBasicCard(app.buildBasicCard(currentAsana.description)
+                        .setSubtitle(currentAsana.name)
+                        .setTitle(currentAsana.sanskritName));
+                //.setImage(appData.image, appData.name));
+                app.data.index++;
+                app.ask(cardView);
+            } else {
+                app.data.index++;
+                app.ask(prompt);
+            }
         } else {
-            app.data.index++;
-            app.ask(prompt);
+            app.tell('Completed');
         }
     }
 
