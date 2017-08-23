@@ -26,11 +26,11 @@ firebase.initializeApp({
 const db = firebase.database();
 
 const weekday = require('weekday');
-const data = require('./data');
 
 // Api.ai intents
 const WELCOME_INTENT = 'input.welcome';
 const START_LESSON_INTENT = 'input.startLesson';
+const NEXT_LESSON_INTENT = 'input.nextLesson';
 const MEDITATION = 'input.meditation';
 
 // Speech constants
@@ -63,7 +63,45 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
                             .setTitle(snapshot.val().sanskritName)
                             .setImage(snapshot.val().image, snapshot.val().name));
                     app.data.index++;
-                    cardView.addSimpleResponse('Shall we start your next asana?');
+                    if (snapshot.val().index >= index) {
+                        cardView.addSimpleResponse(`Great job! You have completed all your ${weekday()}'s asanas?`);
+                    } else {
+                        cardView.addSimpleResponse('Great job! Shall we continue on to your next asana?');
+                    }
+                    app.ask(cardView);
+                } else {
+                    app.data.index++;
+                    app.ask(prompt);
+                }
+            } else {
+                console.error('StartLesson Intent: snapshot does not exists');
+                app.tell('Sorry! Something went wrong please try again later');
+            }
+
+        });
+    }
+
+    function nextLesson() {
+
+        let index = app.data.index;
+        let currentAsana = db.ref(`${weekday()}/${index}`);
+
+        currentAsana.once('value').then((snapshot) => {
+            if (snapshot.exists()) {
+                let prompt = SSML_SPEAK_START + snapshot.val().speech + SSML_SPEAK_END;
+                if (app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
+                    const cardView = app.buildRichResponse()
+                        .addSimpleResponse(prompt)
+                        .addBasicCard(app.buildBasicCard(snapshot.val().description)
+                            .setSubtitle(snapshot.val().name)
+                            .setTitle(snapshot.val().sanskritName)
+                            .setImage(snapshot.val().image, snapshot.val().name));
+                    app.data.index++;
+                    if (snapshot.val().index >= index) {
+                        cardView.addSimpleResponse(`Great job! You have completed all your ${weekday()}'s asanas?`);
+                    } else {
+                        cardView.addSimpleResponse('Great job! Shall we continue on to your next asana?');
+                    }
                     app.ask(cardView);
                 } else {
                     app.data.index++;
@@ -87,6 +125,7 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
     actionMap.set(WELCOME_INTENT, welcome);
 
     actionMap.set(START_LESSON_INTENT, startLesson);
+    actionMap.set(NEXT_LESSON_INTENT, nextLesson);
     actionMap.set(MEDITATION, meditation);
 
     app.handleRequest(actionMap);
