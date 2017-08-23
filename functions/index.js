@@ -128,7 +128,7 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
 
     function meditation() {
         let prompt = SSML_SPEAK_START
-            + `Ok, Lets start, close you eyes and relax`
+            + `Ok, Lets start, close you eyes and relax.`
             + AUDIO
             + SSML_SPEAK_END;
         app.ask(prompt);
