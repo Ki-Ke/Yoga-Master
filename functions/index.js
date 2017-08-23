@@ -50,70 +50,77 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
     function startLesson() {
 
         let index = app.data.index;
+        let fullDay = db.ref(`${weekday()}/`);
         let currentAsana = db.ref(`${weekday()}/${index}`);
 
-        currentAsana.once('value').then((snapshot) => {
-            if (snapshot.exists()) {
-                let prompt = SSML_SPEAK_START + snapshot.val().speech + SSML_SPEAK_END;
-                if (app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
-                    const cardView = app.buildRichResponse()
-                        .addSimpleResponse(prompt)
-                        .addBasicCard(app.buildBasicCard(snapshot.val().description)
-                            .setSubtitle(snapshot.val().name)
-                            .setTitle(snapshot.val().sanskritName)
-                            .setImage(snapshot.val().image, snapshot.val().name));
-                    app.data.index++;
-                    if (index <= snapshot.val().index) {
-                        cardView.addSimpleResponse(`Great job! You have completed all your ${weekday()}'s asanas?`);
-                        app.tell(cardView);
+        fullDay.once('value').then((day) => {
+            currentAsana.once('value').then((snapshot) => {
+                if (snapshot.exists()) {
+                    let prompt = SSML_SPEAK_START + snapshot.val().speech + SSML_SPEAK_END;
+                    if (app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
+                        const cardView = app.buildRichResponse()
+                            .addSimpleResponse(prompt)
+                            .addBasicCard(app.buildBasicCard(snapshot.val().description)
+                                .setSubtitle(snapshot.val().name)
+                                .setTitle(snapshot.val().sanskritName)
+                                .setImage(snapshot.val().image, snapshot.val().name));
+                        if (snapshot.val().index >= day.numChildren()) {
+                            cardView.addSimpleResponse(`Great job! You have completed all your ${weekday()}'s asanas?`);
+                            app.data.index++;
+                            app.tell(cardView);
+                        } else {
+                            cardView.addSimpleResponse('Great job! Shall we continue on to your next asana?');
+                            app.data.index++;
+                            app.ask(cardView);
+                        }
                     } else {
-                        cardView.addSimpleResponse('Great job! Shall we continue on to your next asana?');
-                        app.ask(cardView);
+                        app.data.index++;
+                        app.ask(prompt);
                     }
                 } else {
-                    app.data.index++;
-                    app.ask(prompt);
+                    console.error('StartLesson Intent: snapshot does not exists');
+                    app.tell('Sorry! Something went wrong please try again later');
                 }
-            } else {
-                console.error('StartLesson Intent: snapshot does not exists');
-                app.tell('Sorry! Something went wrong please try again later');
-            }
 
+            });
         });
     }
 
     function nextLesson() {
 
         let index = app.data.index;
+        let fullDay = db.ref(`${weekday()}/`);
         let currentAsana = db.ref(`${weekday()}/${index}`);
 
-        currentAsana.once('value').then((snapshot) => {
-            if (snapshot.exists()) {
-                let prompt = SSML_SPEAK_START + snapshot.val().speech + SSML_SPEAK_END;
-                if (app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
-                    const cardView = app.buildRichResponse()
-                        .addSimpleResponse(prompt)
-                        .addBasicCard(app.buildBasicCard(snapshot.val().description)
-                            .setSubtitle(snapshot.val().name)
-                            .setTitle(snapshot.val().sanskritName)
-                            .setImage(snapshot.val().image, snapshot.val().name));
-                    app.data.index++;
-                    if (index <= snapshot.val().index) {
-                        cardView.addSimpleResponse(`Great job! You have completed all your ${weekday()}'s asanas?`);
-                        app.tell(cardView);
+        fullDay.once('value').then((day) => {
+            currentAsana.once('value').then((snapshot) => {
+                if (snapshot.exists()) {
+                    let prompt = SSML_SPEAK_START + snapshot.val().speech + SSML_SPEAK_END;
+                    if (app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
+                        const cardView = app.buildRichResponse()
+                            .addSimpleResponse(prompt)
+                            .addBasicCard(app.buildBasicCard(snapshot.val().description)
+                                .setSubtitle(snapshot.val().name)
+                                .setTitle(snapshot.val().sanskritName)
+                                .setImage(snapshot.val().image, snapshot.val().name));
+                        app.data.index++;
+                        if (snapshot.val().index >= day.numChildren()) {
+                            cardView.addSimpleResponse(`Great job! You have completed all your ${weekday()}'s asanas?`);
+                            app.tell(cardView);
+                        } else {
+                            cardView.addSimpleResponse('Great job! Shall we continue on to your next asana?');
+                            app.ask(cardView);
+                        }
                     } else {
-                        cardView.addSimpleResponse('Great job! Shall we continue on to your next asana?');
-                        app.ask(cardView);
+                        app.data.index++;
+                        app.ask(prompt);
                     }
                 } else {
-                    app.data.index++;
-                    app.ask(prompt);
+                    console.error('StartLesson Intent: snapshot does not exists');
+                    app.tell('Sorry! Something went wrong please try again later');
                 }
-            } else {
-                console.error('StartLesson Intent: snapshot does not exists');
-                app.tell('Sorry! Something went wrong please try again later');
-            }
 
+            });
         });
     }
 
