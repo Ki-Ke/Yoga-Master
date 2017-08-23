@@ -34,10 +34,12 @@ const NEXT_LESSON_INTENT = 'input.nextLesson';
 const MEDITATION = 'input.meditation';
 
 // Speech constants
+const HOSTING_URL = "https://yogamaster-89cde.firebaseapp.com";
 const SSML_SPEAK_START = '<speak>';
 const SSML_SPEAK_END = '</speak>';
+const MEDITATION_AUDIO = HOSTING_URL + "/audio/meditation.mp3";
 
-const AUDIO = '<audio src="https://firebasestorage.googleapis.com/v0/b/yogamaster-89cde.appspot.com/o/med.mp3?alt=media&token=fe2bdb50-1837-43e5-b2ab-c8371a317c66"/>'
+const AUDIO = '<audio src="'+ MEDITATION_AUDIO +'">Just close your eyes and relax</audio>';
 
 exports.yogaMaster = functions.https.onRequest((request, response) => {
     const app = new App({request, response});
