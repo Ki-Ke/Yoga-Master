@@ -63,7 +63,7 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
                             .setTitle(snapshot.val().sanskritName)
                             .setImage(snapshot.val().image, snapshot.val().name));
                     app.data.index++;
-                    if (index >= snapshot.val().index) {
+                    if (index <= snapshot.val().index) {
                         cardView.addSimpleResponse(`Great job! You have completed all your ${weekday()}'s asanas?`);
                         app.tell(cardView);
                     } else {
@@ -98,7 +98,7 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
                             .setTitle(snapshot.val().sanskritName)
                             .setImage(snapshot.val().image, snapshot.val().name));
                     app.data.index++;
-                    if (index >= snapshot.val().index) {
+                    if (index <= snapshot.val().index) {
                         cardView.addSimpleResponse(`Great job! You have completed all your ${weekday()}'s asanas?`);
                         app.tell(cardView);
                     } else {
