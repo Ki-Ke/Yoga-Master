@@ -1,5 +1,6 @@
 {
   "projects": {
-    "YogaMaster": "yogamaster-89cde"
+    "YogaMaster": "yogamaster-89cde",
+    "default": "yogamaster-89cde"
   }
 }
