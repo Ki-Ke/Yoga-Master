@@ -63,12 +63,13 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
                             .setTitle(snapshot.val().sanskritName)
                             .setImage(snapshot.val().image, snapshot.val().name));
                     app.data.index++;
-                    if (snapshot.val().index >= index) {
+                    if (index >= snapshot.val().index) {
                         cardView.addSimpleResponse(`Great job! You have completed all your ${weekday()}'s asanas?`);
+                        app.tell(cardView);
                     } else {
                         cardView.addSimpleResponse('Great job! Shall we continue on to your next asana?');
+                        app.ask(cardView);
                     }
-                    app.ask(cardView);
                 } else {
                     app.data.index++;
                     app.ask(prompt);
@@ -97,12 +98,13 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
                             .setTitle(snapshot.val().sanskritName)
                             .setImage(snapshot.val().image, snapshot.val().name));
                     app.data.index++;
-                    if (snapshot.val().index >= index) {
+                    if (index >= snapshot.val().index) {
                         cardView.addSimpleResponse(`Great job! You have completed all your ${weekday()}'s asanas?`);
+                        app.tell(cardView);
                     } else {
                         cardView.addSimpleResponse('Great job! Shall we continue on to your next asana?');
+                        app.ask(cardView);
                     }
-                    app.ask(cardView);
                 } else {
                     app.data.index++;
                     app.ask(prompt);
