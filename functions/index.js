@@ -51,15 +51,16 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
 
         currentAsana.once('value').then((snapshot) => {
             if (snapshot.exists()) {
-                let prompt = SSML_SPEAK_START + snapshot.speech + SSML_SPEAK_END;
+                let prompt = SSML_SPEAK_START + snapshot.val().speech + SSML_SPEAK_END;
                 if (app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
                     const cardView = app.buildRichResponse()
                         .addSimpleResponse(prompt)
-                        .addBasicCard(app.buildBasicCard(snapshot.description)
-                            .setSubtitle(snapshot.name)
-                            .setTitle(snapshot.sanskritName));
-                    //.setImage(appData.image, appData.name));
+                        .addBasicCard(app.buildBasicCard(snapshot.val().description)
+                            .setSubtitle(snapshot.val().name)
+                            .setTitle(snapshot.val().sanskritName)
+                            .setImage(snapshot.val().image, snapshot.val().name));
                     app.data.index++;
+                    cardView.addSimpleResponse('Shall we start your next asana?');
                     app.ask(cardView);
                 } else {
                     app.data.index++;
