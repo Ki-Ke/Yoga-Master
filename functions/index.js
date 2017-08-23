@@ -31,10 +31,13 @@ const data = require('./data');
 // Api.ai intents
 const WELCOME_INTENT = 'input.welcome';
 const START_LESSON_INTENT = 'input.startLesson';
+const MEDITATION = 'input.meditation';
 
 // Speech constants
 const SSML_SPEAK_START = '<speak>';
 const SSML_SPEAK_END = '</speak>';
+
+const AUDIO = '<audio src="https://firebasestorage.googleapis.com/v0/b/yogamaster-89cde.appspot.com/o/med.mp3?alt=media&token=fe2bdb50-1837-43e5-b2ab-c8371a317c66"/>'
 
 exports.yogaMaster = functions.https.onRequest((request, response) => {
     const app = new App({request, response});
@@ -74,10 +77,17 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
         });
     }
 
+    function meditation() {
+        let prompt = SSML_SPEAK_START + AUDIO + SSML_SPEAK_END;
+        app.ask(prompt);
+    }
+
+
     const actionMap = new Map();
     actionMap.set(WELCOME_INTENT, welcome);
 
     actionMap.set(START_LESSON_INTENT, startLesson);
+    actionMap.set(MEDITATION, meditation);
 
     app.handleRequest(actionMap);
 });
