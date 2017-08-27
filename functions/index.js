@@ -89,8 +89,8 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
                         }
                     }
                 } else {
-                    console.error('StartLesson Intent: snapshot does not exists');
-                    app.tell('Sorry! Something went wrong please try again later');
+                    console.info(`Completed all lessons for today ${index}`);
+                    app.tell(`Great job! You have completed all your ${weekday()}'s asanas?`);
                 }
 
             });
@@ -134,8 +134,8 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
                         }
                     }
                 } else {
-                    console.error('StartLesson Intent: snapshot does not exists');
-                    app.tell('Sorry! Something went wrong please try again later');
+                    console.info(`Completed all lessons for today ${index}`);
+                    app.tell(`Great job! You have completed all your ${weekday()}'s asanas?`);
                 }
 
             });
