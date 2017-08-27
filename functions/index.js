@@ -76,8 +76,17 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
                             app.ask(cardView);
                         }
                     } else {
-                        app.data.index++;
-                        app.ask(prompt);
+                        const cardView = app.buildRichResponse()
+                            .addSimpleResponse(prompt);
+                        if (snapshot.val().index >= day.numChildren()) {
+                            cardView.addSimpleResponse(`Great job! You have completed all your ${weekday()}'s asanas?`);
+                            app.data.index++;
+                            app.tell(cardView);
+                        } else {
+                            cardView.addSimpleResponse('Great job! Shall we continue on to your next asana?');
+                            app.data.index++;
+                            app.ask(cardView);
+                        }
                     }
                 } else {
                     console.error('StartLesson Intent: snapshot does not exists');
@@ -114,8 +123,15 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
                             app.ask(cardView);
                         }
                     } else {
-                        app.data.index++;
-                        app.ask(prompt);
+                        const cardView = app.buildRichResponse()
+                            .addSimpleResponse(prompt);
+                        if (snapshot.val().index >= day.numChildren()) {
+                            cardView.addSimpleResponse(`Great job! You have completed all your ${weekday()}'s asanas?`);
+                            app.tell(cardView);
+                        } else {
+                            cardView.addSimpleResponse('Great job! Shall we continue on to your next asana?');
+                            app.ask(cardView);
+                        }
                     }
                 } else {
                     console.error('StartLesson Intent: snapshot does not exists');
