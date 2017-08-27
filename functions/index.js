@@ -67,7 +67,7 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
                                 .setTitle(snapshot.val().sanskritName)
                                 .setImage(snapshot.val().image, snapshot.val().name));
                         if (snapshot.val().index >= day.numChildren()) {
-                            cardView.addSimpleResponse(`Great job! You have completed all your ${weekday()}'s asanas?`);
+                            app.tell(`Great job! You have completed all your ${weekday()}'s asanas. Have a great day!`);
                             app.data.index++;
                             app.tell(cardView);
                         } else {
@@ -79,7 +79,7 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
                         const cardView = app.buildRichResponse()
                             .addSimpleResponse(prompt);
                         if (snapshot.val().index >= day.numChildren()) {
-                            cardView.addSimpleResponse(`Great job! You have completed all your ${weekday()}'s asanas?`);
+                            app.tell(`Great job! You have completed all your ${weekday()}'s asanas. Have a great day!`);
                             app.data.index++;
                             app.tell(cardView);
                         } else {
@@ -90,7 +90,7 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
                     }
                 } else {
                     console.info(`Completed all lessons for today ${index}`);
-                    app.tell(`Great job! You have completed all your ${weekday()}'s asanas?`);
+                    app.tell(`Great job! You have completed all your ${weekday()}'s asanas. Have a great day!`);
                 }
 
             });
@@ -116,7 +116,7 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
                                 .setImage(snapshot.val().image, snapshot.val().name));
                         app.data.index++;
                         if (snapshot.val().index >= day.numChildren()) {
-                            cardView.addSimpleResponse(`Great job! You have completed all your ${weekday()}'s asanas?`);
+                            app.tell(`Great job! You have completed all your ${weekday()}'s asanas. Have a great day!`);
                             app.tell(cardView);
                         } else {
                             cardView.addSimpleResponse('Great job! Shall we continue on to your next asana?');
@@ -126,7 +126,7 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
                         const cardView = app.buildRichResponse()
                             .addSimpleResponse(prompt);
                         if (snapshot.val().index >= day.numChildren()) {
-                            cardView.addSimpleResponse(`Great job! You have completed all your ${weekday()}'s asanas?`);
+                            app.tell(`Great job! You have completed all your ${weekday()}'s asanas. Have a great day!`);
                             app.tell(cardView);
                         } else {
                             cardView.addSimpleResponse('Great job! Shall we continue on to your next asana?');
@@ -135,7 +135,7 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
                     }
                 } else {
                     console.info(`Completed all lessons for today ${index}`);
-                    app.tell(`Great job! You have completed all your ${weekday()}'s asanas?`);
+                    app.tell(`Great job! You have completed all your ${weekday()}'s asanas. Have a great day!`);
                 }
 
             });
