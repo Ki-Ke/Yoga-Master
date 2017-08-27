@@ -46,7 +46,7 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
 
     function welcome() {
         app.data.index = 0;
-        app.ask(`Hi, Your yoga master here! To start your ${weekday()} lessons just say 'start lesson'`);
+        app.ask(`Hi, Your yoga master here! To start your ${weekday()} lessons just say "start lesson" or say "start meditation" to start meditating`);
     }
 
     function startLesson() {
