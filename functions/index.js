@@ -71,7 +71,7 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
                                 app.data.index++;
                             } else {
                                 app.data.index++;
-                                app.ask('Great job! Shall we continue on to your next asana?');
+                                app.ask('Great job! To start your next asana, just say "Next Lesson"?');
                             }
                             return;
                         }
@@ -83,7 +83,7 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
                                 app.data.index++;
                             } else {
                                 app.data.index++;
-                                app.ask('Great job! Shall we continue on to your next asana?');
+                                app.ask('Great job! To start your next asana, just say "Next Lesson"?');
                             }
                             return;
                         }
@@ -136,7 +136,7 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
                                 app.data.index++;
                             } else {
                                 app.data.index++;
-                                app.ask('Great job! Shall we continue on to your next asana?');
+                                app.ask('Great job! To start your next asana, just say "Next Lesson"?');
                             }
                             return;
                         }
@@ -148,7 +148,7 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
                                 app.data.index++;
                             } else {
                                 app.data.index++;
-                                app.ask('Great job! Shall we continue on to your next asana?');
+                                app.ask('Great job! To start your next asana, just say "Next Lesson"?');
                             }
                             return;
                         }
@@ -201,7 +201,7 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
                                 app.data.index++;
                             } else {
                                 app.data.index++;
-                                app.ask('Great job! Shall we continue on to your next asana?');
+                                app.ask('Great job! To start your next asana, just say "Next Lesson"?');
                             }
                             return;
                         }
@@ -213,7 +213,7 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
                                 app.data.index++;
                             } else {
                                 app.data.index++;
-                                app.ask('Great job! Shall we continue on to your next asana?');
+                                app.ask('Great job! To start your next asana, just say "Next Lesson"?');
                             }
                             return;
                         }
