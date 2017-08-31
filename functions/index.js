@@ -67,10 +67,12 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
 
                         if (!speechSnapshot.exists()){
                             if (snapshot.val().index >= day.numChildren()) {
-                                app.tell(`Great job! You have completed all your ${weekday()}'s asanas. Have a great day!`);
                                 app.data.index++;
+                                app.data.currentSpeechIndex = 0;
+                                app.tell(`Great job! You have completed all your ${weekday()}'s asanas. Have a great day!`);
                             } else {
                                 app.data.index++;
+                                app.data.currentSpeechIndex = 0;
                                 app.ask('Great job! To start your next asana, just say "Next Lesson"?');
                             }
                             return;
@@ -79,10 +81,12 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
                         const speech = speechSnapshot.val().value;
                         if (!speech) {
                             if (snapshot.val().index >= day.numChildren()) {
-                                app.tell(`Great job! You have completed all your ${weekday()}'s asanas. Have a great day!`);
                                 app.data.index++;
+                                app.data.currentSpeechIndex = 0;
+                                app.tell(`Great job! You have completed all your ${weekday()}'s asanas. Have a great day!`);
                             } else {
                                 app.data.index++;
+                                app.data.currentSpeechIndex = 0;
                                 app.ask('Great job! To start your next asana, just say "Next Lesson"?');
                             }
                             return;
@@ -132,10 +136,12 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
 
                         if (!speechSnapshot.exists()){
                             if (snapshot.val().index >= day.numChildren()) {
-                                app.tell(`Great job! You have completed all your ${weekday()}'s asanas. Have a great day!`);
                                 app.data.index++;
+                                app.data.currentSpeechIndex = 0;
+                                app.tell(`Great job! You have completed all your ${weekday()}'s asanas. Have a great day!`);
                             } else {
                                 app.data.index++;
+                                app.data.currentSpeechIndex = 0;
                                 app.ask('Great job! To start your next asana, just say "Next Lesson"?');
                             }
                             return;
@@ -144,10 +150,12 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
                         const speech = speechSnapshot.val().value;
                         if (!speech) {
                             if (snapshot.val().index >= day.numChildren()) {
-                                app.tell(`Great job! You have completed all your ${weekday()}'s asanas. Have a great day!`);
                                 app.data.index++;
+                                app.data.currentSpeechIndex = 0;
+                                app.tell(`Great job! You have completed all your ${weekday()}'s asanas. Have a great day!`);
                             } else {
                                 app.data.index++;
+                                app.data.currentSpeechIndex = 0;
                                 app.ask('Great job! To start your next asana, just say "Next Lesson"?');
                             }
                             return;
@@ -197,10 +205,12 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
 
                         if (!speechSnapshot.exists()){
                             if (snapshot.val().index >= day.numChildren()) {
-                                app.tell(`Great job! You have completed all your ${weekday()}'s asanas. Have a great day!`);
                                 app.data.index++;
+                                app.data.currentSpeechIndex = 0;
+                                app.tell(`Great job! You have completed all your ${weekday()}'s asanas. Have a great day!`);
                             } else {
                                 app.data.index++;
+                                app.data.currentSpeechIndex = 0;
                                 app.ask('Great job! To start your next asana, just say "Next Lesson"?');
                             }
                             return;
@@ -209,10 +219,12 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
                         const speech = speechSnapshot.val().value;
                         if (!speech) {
                             if (snapshot.val().index >= day.numChildren()) {
-                                app.tell(`Great job! You have completed all your ${weekday()}'s asanas. Have a great day!`);
                                 app.data.index++;
+                                app.data.currentSpeechIndex = 0;
+                                app.tell(`Great job! You have completed all your ${weekday()}'s asanas. Have a great day!`);
                             } else {
                                 app.data.index++;
+                                app.data.currentSpeechIndex = 0;
                                 app.ask('Great job! To start your next asana, just say "Next Lesson"?');
                             }
                             return;
