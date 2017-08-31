@@ -59,8 +59,8 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
 
         fullDay.once('value').then((day) => {
             currentAsana.once('value').then((snapshot) => {
-                if (snapshot.exists()) {
 
+                if (snapshot.exists()) {
                     const currentSpeechIndex = app.data.currentSpeechIndex;
                     const currentSpeech = db.ref(`${weekday()}/${index}/speech/${currentSpeechIndex}`);
                     currentSpeech.once('value').then((speechSnapshot) => {
@@ -86,13 +86,13 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
                                     .setTitle(snapshot.val().sanskritName)
                                     .setImage(snapshot.val().image, snapshot.val().name));
                             app.data.index++;
-                            app.addSimpleResponse(`When you are ready for the next step, just say "Next step"`);
+                            cardView.addSimpleResponse(`When you are ready for the next step, just say "Next step"`);
                             app.data.currentSpeechIndex++;
                             app.tell(cardView);
                         } else {
                             const cardView = app.buildRichResponse()
                                 .addSimpleResponse(prompt);
-                            app.addSimpleResponse(`When you are ready for the next step, just say "Next step"`);
+                            cardView.addSimpleResponse(`When you are ready for the next step, just say "Next step"`);
                             app.data.currentSpeechIndex++;
                             app.tell(cardView);
                         }
@@ -102,7 +102,6 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
                     console.info(`Completed all lessons for today ${index}`);
                     app.tell(`Great job! You have completed all your ${weekday()}'s asanas. Have a great day!`);
                 }
-
 
             });
         });
@@ -116,40 +115,45 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
 
         fullDay.once('value').then((day) => {
             currentAsana.once('value').then((snapshot) => {
+
                 if (snapshot.exists()) {
-
                     const currentSpeechIndex = app.data.currentSpeechIndex;
-                    const currentSpeech = snapshot.val().speech(currentSpeechIndex).value;
-                    if (!currentSpeech) {
-                        if (snapshot.val().index >= day.numChildren()) {
-                            app.tell(`Great job! You have completed all your ${weekday()}'s asanas. Have a great day!`);
-                            app.data.index++;
-                        } else {
-                            app.data.index++;
-                            app.ask('Great job! Shall we continue on to your next asana?');
+                    const currentSpeech = db.ref(`${weekday()}/${index}/speech/${currentSpeechIndex}`);
+                    currentSpeech.once('value').then((speechSnapshot) => {
+                        const speech = speechSnapshot.val().value;
+                        console.log(speechSnapshot.val().value);
+                        console.log(currentSpeech);
+                        if (!speech) {
+                            if (snapshot.val().index >= day.numChildren()) {
+                                app.tell(`Great job! You have completed all your ${weekday()}'s asanas. Have a great day!`);
+                                app.data.index++;
+                            } else {
+                                app.data.index++;
+                                app.ask('Great job! Shall we continue on to your next asana?');
+                            }
+                            return;
                         }
-                        return;
-                    }
+                        let prompt = SSML_SPEAK_START + speech + SSML_SPEAK_END;
+                        if (app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
+                            const cardView = app.buildRichResponse()
+                                .addSimpleResponse(prompt)
+                                .addBasicCard(app.buildBasicCard(snapshot.val().description)
+                                    .setSubtitle(snapshot.val().name)
+                                    .setTitle(snapshot.val().sanskritName)
+                                    .setImage(snapshot.val().image, snapshot.val().name));
+                            app.data.index++;
+                            cardView.addSimpleResponse(`When you are ready for the next step, just say "Next step"`);
+                            app.data.currentSpeechIndex++;
+                            app.tell(cardView);
+                        } else {
+                            const cardView = app.buildRichResponse()
+                                .addSimpleResponse(prompt);
+                            cardView.addSimpleResponse(`When you are ready for the next step, just say "Next step"`);
+                            app.data.currentSpeechIndex++;
+                            app.tell(cardView);
+                        }
 
-                    let prompt = SSML_SPEAK_START + snapshot.val().speech + SSML_SPEAK_END;
-                    if (app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
-                        const cardView = app.buildRichResponse()
-                            .addSimpleResponse(prompt)
-                            .addBasicCard(app.buildBasicCard(snapshot.val().description)
-                                .setSubtitle(snapshot.val().name)
-                                .setTitle(snapshot.val().sanskritName)
-                                .setImage(snapshot.val().image, snapshot.val().name));
-                        app.data.index++;
-                        app.addSimpleResponse(`When you are ready for the next step, just say "Next step"`);
-                        app.data.currentSpeechIndex++;
-                        app.tell(cardView);
-                    } else {
-                        const cardView = app.buildRichResponse()
-                            .addSimpleResponse(prompt);
-                        app.addSimpleResponse(`When you are ready for the next step, just say "Next step"`);
-                        app.data.currentSpeechIndex++;
-                        app.tell(cardView);
-                    }
+                    });
                 } else {
                     console.info(`Completed all lessons for today ${index}`);
                     app.tell(`Great job! You have completed all your ${weekday()}'s asanas. Have a great day!`);
@@ -167,41 +171,45 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
 
         fullDay.once('value').then((day) => {
             currentAsana.once('value').then((snapshot) => {
+
                 if (snapshot.exists()) {
-
                     const currentSpeechIndex = app.data.currentSpeechIndex;
-                    const currentSpeech = snapshot.val().speech(currentSpeechIndex).value;
-
-                    console.log(currentSpeech);
-                    if (!currentSpeech) {
-                        if (snapshot.val().index >= day.numChildren()) {
-                            app.tell(`Great job! You have completed all your ${weekday()}'s asanas. Have a great day!`);
-                            app.data.index++;
-                        } else {
-                            app.data.index++;
-                            app.ask('Great job! Shall we continue on to your next asana?');
+                    const currentSpeech = db.ref(`${weekday()}/${index}/speech/${currentSpeechIndex}`);
+                    currentSpeech.once('value').then((speechSnapshot) => {
+                        const speech = speechSnapshot.val().value;
+                        console.log(speechSnapshot.val().value);
+                        console.log(currentSpeech);
+                        if (!speech) {
+                            if (snapshot.val().index >= day.numChildren()) {
+                                app.tell(`Great job! You have completed all your ${weekday()}'s asanas. Have a great day!`);
+                                app.data.index++;
+                            } else {
+                                app.data.index++;
+                                app.ask('Great job! Shall we continue on to your next asana?');
+                            }
+                            return;
                         }
-                        return;
-                    }
+                        let prompt = SSML_SPEAK_START + speech + SSML_SPEAK_END;
+                        if (app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
+                            const cardView = app.buildRichResponse()
+                                .addSimpleResponse(prompt)
+                                .addBasicCard(app.buildBasicCard(snapshot.val().description)
+                                    .setSubtitle(snapshot.val().name)
+                                    .setTitle(snapshot.val().sanskritName)
+                                    .setImage(snapshot.val().image, snapshot.val().name));
+                            app.data.index++;
+                            cardView.addSimpleResponse(`When you are ready for the next step, just say "Next step"`);
+                            app.data.currentSpeechIndex++;
+                            app.tell(cardView);
+                        } else {
+                            const cardView = app.buildRichResponse()
+                                .addSimpleResponse(prompt);
+                            cardView.addSimpleResponse(`When you are ready for the next step, just say "Next step"`);
+                            app.data.currentSpeechIndex++;
+                            app.tell(cardView);
+                        }
 
-                    let prompt = SSML_SPEAK_START + currentSpeech + SSML_SPEAK_END;
-                    if (app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
-                        const cardView = app.buildRichResponse()
-                            .addSimpleResponse(prompt)
-                            .addBasicCard(app.buildBasicCard(snapshot.val().description)
-                                .setSubtitle(snapshot.val().name)
-                                .setTitle(snapshot.val().sanskritName)
-                                .setImage(snapshot.val().image, snapshot.val().name));
-                        app.addSimpleResponse(`When you are ready for the next step, just say "Next step"`);
-                        app.data.currentSpeechIndex++;
-                        app.tell(cardView);
-                    } else {
-                        const cardView = app.buildRichResponse()
-                            .addSimpleResponse(prompt);
-                        app.addSimpleResponse(`When you are ready for the next step, just say "Next step"`);
-                        app.data.currentSpeechIndex++;
-                        app.tell(cardView);
-                    }
+                    });
                 } else {
                     console.info(`Completed all lessons for today ${index}`);
                     app.tell(`Great job! You have completed all your ${weekday()}'s asanas. Have a great day!`);
