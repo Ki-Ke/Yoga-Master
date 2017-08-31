@@ -31,6 +31,7 @@ const weekday = require('weekday');
 const WELCOME_INTENT = 'input.welcome';
 const START_LESSON_INTENT = 'input.startLesson';
 const NEXT_LESSON_INTENT = 'input.nextLesson';
+const NEXT_STEP = 'input.nextStep';
 const MEDITATION = 'input.meditation';
 
 // Speech constants
@@ -46,6 +47,7 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
 
     function welcome() {
         app.data.index = 0;
+        app.data.currentSpeechIndex = 0;
         app.ask(`Hi, Your yoga master here! To start your ${weekday()} lessons just say "start lesson" or say "start meditation" to start meditating`);
     }
 
@@ -59,6 +61,7 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
             currentAsana.once('value').then((snapshot) => {
                 if (snapshot.exists()) {
                     let prompt = SSML_SPEAK_START + snapshot.val().speech + SSML_SPEAK_END;
+                    app.data.currentSpeechIndex++;
                     if (app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
                         const cardView = app.buildRichResponse()
                             .addSimpleResponse(prompt)
@@ -107,6 +110,7 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
             currentAsana.once('value').then((snapshot) => {
                 if (snapshot.exists()) {
                     let prompt = SSML_SPEAK_START + snapshot.val().speech + SSML_SPEAK_END;
+                    app.data.currentSpeechIndex++;
                     if (app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
                         const cardView = app.buildRichResponse()
                             .addSimpleResponse(prompt)
@@ -142,6 +146,59 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
         });
     }
 
+    function nextStep() {
+
+        let index = app.data.index;
+        let fullDay = db.ref(`${weekday()}/`);
+        let currentAsana = db.ref(`${weekday()}/${index}`);
+
+        fullDay.once('value').then((day) => {
+            currentAsana.once('value').then((snapshot) => {
+                if (snapshot.exists()) {
+
+                    const currentSpeechIndex = app.data.currentSpeechIndex;
+                    const currentSpeech = snapshot.val().speech(currentSpeechIndex);
+
+                    console.log(currentSpeech);
+                    if (!currentSpeech){
+                        if (snapshot.val().index >= day.numChildren()) {
+                            app.tell(`Great job! You have completed all your ${weekday()}'s asanas. Have a great day!`);
+                            app.data.index++;
+                        } else {
+                            app.data.index++;
+                            app.ask('Great job! Shall we continue on to your next asana?');
+                        }
+                        return;
+                    }
+
+                    let prompt = SSML_SPEAK_START + currentSpeech + SSML_SPEAK_END;
+                    if (app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
+                        const cardView = app.buildRichResponse()
+                            .addSimpleResponse(prompt)
+                            .addBasicCard(app.buildBasicCard(snapshot.val().description)
+                                .setSubtitle(snapshot.val().name)
+                                .setTitle(snapshot.val().sanskritName)
+                                .setImage(snapshot.val().image, snapshot.val().name));
+                        app.addSimpleResponse(`When you are ready for the next step, just say "Next step"`);
+                        app.data.currentSpeechIndex++;
+                        app.tell(cardView);
+                    } else {
+                        const cardView = app.buildRichResponse()
+                            .addSimpleResponse(prompt);
+                        app.addSimpleResponse(`When you are ready for the next step, just say "Next step"`);
+                        app.data.index++;
+                        app.tell(cardView);
+                    }
+                } else {
+                    console.info(`Completed all lessons for today ${index}`);
+                    app.tell(`Great job! You have completed all your ${weekday()}'s asanas. Have a great day!`);
+                }
+
+            });
+        });
+
+    }
+
     function meditation() {
         let prompt = SSML_SPEAK_START
             + `Ok, Lets start, close your eyes and relax.`
@@ -156,6 +213,7 @@ exports.yogaMaster = functions.https.onRequest((request, response) => {
 
     actionMap.set(START_LESSON_INTENT, startLesson);
     actionMap.set(NEXT_LESSON_INTENT, nextLesson);
+    actionMap.set(NEXT_STEP, nextStep);
     actionMap.set(MEDITATION, meditation);
 
     app.handleRequest(actionMap);
